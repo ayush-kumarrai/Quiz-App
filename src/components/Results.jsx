@@ -1,4 +1,6 @@
-const Results = ({ questions, selectedOptions, score, onRestart }) => {
+const Results = ({ questions, selectedOptions, score, highScore, onRestart }) => {
+  const isNewHighScore = score === highScore && score > 0
+  
   return (
     <div className="container">
       <div className="score-display">
@@ -9,6 +11,13 @@ const Results = ({ questions, selectedOptions, score, onRestart }) => {
            score >= questions.length * 0.7 ? "Great job!" :
            score >= questions.length * 0.5 ? "Good effort!" :
            "Keep practicing!"}
+        </div>
+        
+        <div className="high-score-display">
+          <div className="best-score">Best Score: {highScore}/{questions.length}</div>
+          {isNewHighScore && (
+            <div className="new-high-score">New High Score! 🎉</div>
+          )}
         </div>
       </div>
 

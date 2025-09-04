@@ -1,4 +1,3 @@
-// App.jsx
 import { useState, useEffect } from 'react'
 import Quiz from './components/Quiz'
 import Results from './components/Results'
@@ -12,8 +11,14 @@ function App() {
   const [quizCompleted, setQuizCompleted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [highScore, setHighScore] = useState(0)
 
   useEffect(() => {
+    const savedHighScore = localStorage.getItem('quizHighScore')
+    if (savedHighScore) {
+      setHighScore(parseInt(savedHighScore))
+    }
+    
     fetchQuestions()
   }, [])
 
@@ -79,6 +84,12 @@ function App() {
       }
     })
     setScore(correctCount)
+    
+    // Update high score if current score is higher
+    if (correctCount > highScore) {
+      setHighScore(correctCount)
+      localStorage.setItem('quizHighScore', correctCount)
+    }
   }
 
   const handleRestart = () => {
@@ -114,6 +125,12 @@ function App() {
 
   return (
     <div className="app">
+      <header>
+        <h1>Quiz Challenge</h1>
+        <p>Test your knowledge with our quiz</p>
+        {highScore > 0 && <div className="high-score">Best Score: {highScore}/{questions.length}</div>}
+      </header>
+      
       {!quizCompleted ? (
         <Quiz
           questions={questions}
@@ -128,6 +145,7 @@ function App() {
           questions={questions}
           selectedOptions={selectedOptions}
           score={score}
+          highScore={highScore}
           onRestart={handleRestart}
         />
       )}
